@@ -1,0 +1,18 @@
+source_dir: <source_dir>
+
+# defaults
+target_dir: "converted"
+
+file_types:
+  - ".jpg"
+  - ".JPG"
+  - ".jpeg"
+  - ".JPEG"
+  - ".png"
+  - ".PNG"
+  - ".bmp"
+  - ".BMP"
+
+target_format: "tiff"
+
+verbose: True
