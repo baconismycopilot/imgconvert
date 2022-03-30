@@ -1,0 +1,6 @@
+.idea/
+.DS_Store
+utils.py
+.python-version
+.pyc
+__pycache__
