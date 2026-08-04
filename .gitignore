@@ -1,6 +1,23 @@
 .idea/
 .DS_Store
 utils.py
-.python-version
-.pyc
-__pycache__
+
+# Python artifacts
+*.pyc
+*.pyo
+__pycache__/
+.pytest_cache/
+*.egg-info/
+build/
+dist/
+
+# uv manages .venv; uv.lock and .python-version are committed on purpose
+# so `uv sync` reproduces the same environment everywhere.
+.venv/
+
+# Default output directory
+converted/
+
+# Local-only Claude Code files (never commit)
+SESSION.md
+CLAUDE.local.md
