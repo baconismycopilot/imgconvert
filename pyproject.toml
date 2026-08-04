@@ -1,0 +1,41 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "imgconvert"
+version = "0.2.0"
+description = "Convert a directory of images to another format, in parallel."
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+keywords = ["image", "convert", "batch", "pillow", "cli"]
+classifiers = [
+    "Environment :: Console",
+    "Intended Audience :: End Users/Desktop",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Graphics :: Graphics Conversion",
+]
+dependencies = [
+    "pillow>=11",
+    "typer>=0.12",
+    "tqdm>=4.66",
+]
+
+[project.scripts]
+imgconvert = "imgconvert.cli:app"
+
+# PEP 735 group. Installed by `uv sync` automatically, and excluded from the
+# published wheel — unlike optional-dependencies, which would be an `extra`.
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "flake8>=7",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/imgconvert"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

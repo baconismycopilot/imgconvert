@@ -1,4 +1,4 @@
-.PHONY: clean clean-pyc clean-dist docker dist docs help
+.PHONY: help sync lock upgrade run test lint check build clean clean-pyc clean-test clean-dist
 .DEFAULT_GOAL := help
 
 define PRINT_HELP_PYSCRIPT
@@ -13,27 +13,42 @@ endef
 export PRINT_HELP_PYSCRIPT
 
 help:
-	@python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
+	@uv run python -c "$$PRINT_HELP_PYSCRIPT" < $(MAKEFILE_LIST)
 
-clean: clean-pyc clean-test ## remove all build, test, coverage and Python artifacts
+sync: ## Create/update .venv from uv.lock
+	uv sync
 
+lock: ## Re-resolve dependencies and update uv.lock
+	uv lock
 
-clean-pyc: ## remove Python file artifacts
+upgrade: ## Upgrade all locked dependencies to their latest allowed versions
+	uv lock --upgrade
+
+run: ## Run the CLI, e.g. `make run ARGS="~/Pictures -f webp"`
+	uv run imgconvert $(ARGS)
+
+test: ## Run the test suite
+	uv run pytest
+
+lint: ## Validate code against PEP8
+	uv run flake8 .
+
+check: lint test ## Lint and test
+
+build: ## Build sdist and wheel into dist/
+	uv build
+
+clean: clean-pyc clean-test clean-dist ## Remove all build, test and Python artifacts
+
+clean-pyc: ## Remove Python file artifacts
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
-	find . -name '__pycache__' -exec rm -fr {} +
+	find . -name '__pycache__' -type d -exec rm -rf {} +
 
-clean-test: ## remove test and coverage artifacts
-	rm -fr .tox/
+clean-test: ## Remove test and coverage artifacts
 	rm -f .coverage
-	rm -fr htmlcov/
-	rm -rf .pytest_cache/
+	rm -rf htmlcov/ .pytest_cache/
 
-lint: ## Validate code against PEP8
-	flake8 .
-
-install: ## Install requirements
-	pip install -U pip && pip install -r requirements.txt
-	mkdir converted
-	$(call clean)
+clean-dist: ## Remove build artifacts
+	rm -rf build/ dist/ *.egg-info src/*.egg-info
